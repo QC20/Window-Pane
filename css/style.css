@@ -1,0 +1,94 @@
+/* VOICE: quiet and tactile, a window you stand in front of and touch.
+   IDEA: a sheet of patterned glass in a frame; the controls are smoked glass laid on top of it.
+   PICTURE: the whole screen is the live pane.
+   COLOUR and TYPE: the scene behind the glass carries all colour; panels are smoked green-black, Manrope.
+   LAYOUT: full-bleed canvas, a dock along the bottom, a studio drawer on the right (bottom sheet on phones). */
+:root {
+  color-scheme: dark;
+  --ink: #eef4ee;
+  --dim: #b4c2b6;
+  --pill: rgba(8, 14, 10, .5);
+  --pill-hi: rgba(236, 244, 236, .94);
+  --line: rgba(255, 255, 255, .15);
+  --accent: #d9f99d;
+  --dockH: 120px;
+  --safeB: env(safe-area-inset-bottom, 0px);
+}
+:root[data-theme=light], :root[data-theme=dark] { color-scheme: dark; }
+* { box-sizing: border-box; min-width: 0; }
+html, body { margin: 0; height: 100%; background: #06100a; color: var(--ink); overflow: hidden; }
+body { font: 15px/1.4 Manrope, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+#glass { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; cursor: grab; }
+#glass[data-tool=hand]:active { cursor: grabbing; }
+#glass[data-tool=sun] { cursor: crosshair; }
+#glass[data-tool=breath] { cursor: cell; }
+#glass[data-tool=knock] { cursor: pointer; }
+
+.panel {
+  background: var(--pill);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  border-radius: 16px;
+}
+
+.brand { position: fixed; top: max(14px, env(safe-area-inset-top, 0px)); left: 14px; padding: 9px 14px 10px; pointer-events: none; }
+.brand h1 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .01em; line-height: 1.2; }
+.brand p { margin: 2px 0 0; font-size: 13px; color: var(--dim); }
+
+.toast { position: fixed; top: max(14px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); padding: 10px 16px; font-size: 14px; max-width: min(520px, calc(100% - 28px)); text-align: center; transition: opacity .35s; pointer-events: none; }
+.toast.fade { opacity: 0; }
+
+/* dock */
+.dock { position: fixed; left: 50%; bottom: calc(12px + var(--safeB)); transform: translateX(-50%); width: min(1040px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 8px; }
+.presets { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px; scrollbar-width: none; }
+.presets::-webkit-scrollbar { display: none; }
+.chip { flex: none; scroll-snap-align: start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px 0 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--pill); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); color: var(--dim); font-size: 14px; cursor: pointer; white-space: nowrap; }
+.chip:hover { color: var(--ink); }
+.chip i { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .25); flex: none; }
+.chip[aria-pressed=true] { color: #08130b; background: var(--pill-hi); border-color: transparent; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+.tools, .actions { display: flex; gap: 4px; padding: 4px; border-radius: 16px; border: 1px solid var(--line); background: var(--pill); -webkit-backdrop-filter: blur(18px) saturate(1.35); backdrop-filter: blur(18px) saturate(1.35); }
+.tools button, .actions button { appearance: none; border: 0; background: transparent; border-radius: 12px; min-height: 44px; padding: 0 14px; display: inline-flex; align-items: center; gap: 7px; color: var(--dim); cursor: pointer; font-size: 14px; font-weight: 500; }
+.tools button:hover, .actions button:hover { color: var(--ink); background: rgba(255, 255, 255, .07); }
+.tools button[aria-pressed=true], .actions button[aria-expanded=true] { color: #08130b; background: var(--pill-hi); }
+button:focus-visible, .chip:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* studio drawer */
+.studio { background: rgba(8, 14, 10, .66); position: fixed; right: 14px; top: 14px; bottom: calc(var(--dockH) + 22px + var(--safeB)); width: 340px; overflow-y: auto; padding: 14px 16px 18px; scrollbar-width: thin; }
+.studio-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.studio h2 { margin: 0; font-size: 16px; font-weight: 700; }
+.studio h3 { margin: 16px 0 8px; font-size: 13px; font-weight: 600; color: var(--dim); }
+.studio .close { appearance: none; border: 0; background: transparent; width: 44px; height: 44px; margin-right: -10px; border-radius: 12px; display: grid; place-items: center; cursor: pointer; color: var(--dim); }
+.studio .close:hover { color: var(--ink); background: rgba(255, 255, 255, .07); }
+.seg, .row { display: flex; flex-wrap: wrap; gap: 5px; }
+.seg button, .row button { appearance: none; border: 1px solid var(--line); background: rgba(255, 255, 255, .03); border-radius: 10px; min-height: 36px; padding: 0 11px; font-size: 13.5px; color: var(--dim); cursor: pointer; }
+.seg button:hover, .row button:hover { color: var(--ink); border-color: rgba(255, 255, 255, .3); }
+.seg button[aria-pressed=true], .row button[aria-pressed=true] { color: #08130b; background: var(--pill-hi); border-color: transparent; }
+.seg .sw { display: inline-flex; gap: 2px; vertical-align: -2px; margin-right: 6px; }
+.seg .sw b { width: 7px; height: 12px; border-radius: 2px; }
+.sliders { display: grid; gap: 10px; }
+.sliders label { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13.5px; color: var(--dim); }
+.sliders output { color: var(--ink); font-variant-numeric: tabular-nums; }
+.sliders input { grid-column: 1 / -1; width: 100%; accent-color: #e7f3df; height: 24px; margin: 0; }
+.note { margin: 8px 0 0; font-size: 13px; color: var(--dim); }
+.keys dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13px; }
+.keys dt { color: var(--ink); font-weight: 600; }
+.keys dd { margin: 0; color: var(--dim); }
+
+#nogl { position: fixed; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; text-align: center; color: var(--dim); }
+#nogl[hidden], .toast[hidden], .studio[hidden] { display: none; }
+
+body.dragover::after { content: "Drop to put it behind the glass"; position: fixed; inset: 12px; border: 2px dashed rgba(255, 255, 255, .6); border-radius: 20px; display: grid; place-items: center; font-size: 18px; background: rgba(0, 0, 0, .35); pointer-events: none; }
+
+@media (max-width: 720px) {
+  .brand { display: none; }
+  .studio { left: 8px; right: 8px; top: auto; width: auto; max-height: 56vh; bottom: calc(var(--dockH) + 18px + var(--safeB)); }
+  .tools button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tools button, .actions button { padding: 0 12px; }
+  .bar { flex-wrap: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
